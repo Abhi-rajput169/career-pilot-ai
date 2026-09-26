@@ -1,0 +1,1159 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CareerPilot AI</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg: #09090f;
+            --surface: #111119;
+            --border: #1e1e2e;
+            --text: #e8e8f0;
+            --muted: #8888a8;
+            --accent: #6366f1;
+            --accent-dark: #4f52d4;
+            --green: #22c55e;
+            --red: #ef4444;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .page {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 1rem;
+        }
+
+        /* ── LANDING ── */
+        .logo {
+            width: 44px;
+            height: 44px;
+            background: var(--accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 20px;
+        }
+
+        .landing h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: .5rem;
+        }
+
+        .landing p {
+            color: var(--muted);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .card label {
+            display: block;
+            font-size: .85rem;
+            font-weight: 500;
+            color: var(--muted);
+            margin-bottom: .5rem;
+        }
+
+        .card textarea {
+            width: 100%;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: .95rem;
+            padding: .75rem 1rem;
+            resize: none;
+            outline: none;
+            transition: border-color .2s;
+        }
+
+        .card textarea:focus {
+            border-color: var(--accent);
+        }
+
+        .hint {
+            color: var(--muted);
+            font-size: .78rem;
+            margin-top: .5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        /* ── BUTTONS ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            padding: .65rem 1.4rem;
+            border-radius: 10px;
+            border: none;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: .9rem;
+            transition: all .2s;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, .25);
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-dark);
+        }
+
+        .btn-primary:disabled {
+            opacity: .45;
+            cursor: not-allowed;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+        }
+
+        .btn-ghost:hover {
+            color: var(--text);
+            border-color: var(--accent);
+        }
+
+        /* ── ANALYZING ── */
+        .analyzing {
+            text-align: center;
+        }
+
+        .analyzing h2 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: .5rem;
+        }
+
+        .analyzing p {
+            color: var(--muted);
+            font-size: .875rem;
+            margin-bottom: 2rem;
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: .75rem;
+            width: 100%;
+            max-width: 380px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: .75rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: .875rem 1.1rem;
+            font-size: .875rem;
+            color: var(--muted);
+            transition: all .3s;
+        }
+
+        .step.running {
+            color: var(--text);
+            border-color: var(--accent);
+        }
+
+        .step.done {
+            color: var(--green);
+            border-color: #163b25;
+        }
+
+        .step.error {
+            color: var(--red);
+            border-color: #3b1616;
+        }
+
+        .step-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+        }
+
+        .spin {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── RESEARCH ── */
+        .research-wrap {
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .section {
+            margin-bottom: 1.75rem;
+        }
+
+        .section-title {
+            font-size: .7rem;
+            font-weight: 600;
+            color: #3a3a5e;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            margin-bottom: .75rem;
+        }
+
+        .section-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .overview-text {
+            color: var(--muted);
+            font-size: .875rem;
+            line-height: 1.7;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: .75rem;
+        }
+
+        .info-item {
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: .75rem;
+        }
+
+        .info-label {
+            font-size: .7rem;
+            font-weight: 600;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: .08em;
+            margin-bottom: .25rem;
+        }
+
+        .info-value {
+            font-size: .8rem;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        .req-list {
+            display: flex;
+            flex-direction: column;
+            gap: .5rem;
+        }
+
+        .req-item {
+            display: flex;
+            align-items: flex-start;
+            gap: .75rem;
+            padding: .625rem .875rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+        }
+
+        .badge {
+            font-size: .65rem;
+            font-weight: 600;
+            padding: .2rem .5rem;
+            border-radius: 5px;
+            flex-shrink: 0;
+            margin-top: .1rem;
+        }
+
+        .badge-skill {
+            background: #1e1b4b;
+            color: #818cf8;
+        }
+
+        .badge-tech {
+            background: #0c1a2e;
+            color: #38bdf8;
+        }
+
+        .badge-edu {
+            background: #1e1b3b;
+            color: #a78bfa;
+        }
+
+        .badge-exp {
+            background: #2d1b2e;
+            color: #f472b6;
+        }
+
+        .badge-cert {
+            background: #0d2626;
+            color: #2dd4bf;
+        }
+
+        .badge-other {
+            background: #1a1a1a;
+            color: #9ca3af;
+        }
+
+        .req-text {
+            font-size: .85rem;
+            font-weight: 500;
+        }
+
+        .req-imp {
+            font-size: .75rem;
+            color: var(--muted);
+            margin-top: .1rem;
+        }
+
+        .actions {
+            display: flex;
+            justify-content: flex-end;
+            margin-top: 1.5rem;
+        }
+
+        /* ── ASSESSMENT ── */
+        .assessment-wrap {
+            width: 100%;
+            max-width: 540px;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: var(--border);
+            border-radius: 2px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width .4s;
+        }
+
+        .q-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: .8rem;
+            color: var(--muted);
+        }
+
+        .q-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 1.75rem;
+            line-height: 1.5;
+        }
+
+        .level-btns,
+        .yesno-btns {
+            display: flex;
+            gap: .75rem;
+            flex-wrap: wrap;
+        }
+
+        .choice-btn {
+            padding: .6rem 1.4rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--muted);
+            font-family: inherit;
+            font-size: .875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .choice-btn:hover {
+            border-color: var(--accent);
+            color: var(--text);
+        }
+
+        .choice-btn.selected {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        .num-input {
+            width: 120px;
+            padding: .6rem 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            font-size: .95rem;
+            outline: none;
+        }
+
+        .num-input:focus {
+            border-color: var(--accent);
+        }
+
+        .text-input {
+            width: 100%;
+            padding: .75rem 1rem;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
+            font-family: inherit;
+            font-size: .875rem;
+            outline: none;
+            resize: none;
+        }
+
+        .text-input:focus {
+            border-color: var(--accent);
+        }
+
+        .q-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        /* ── SKILL GAP / RESULTS ── */
+        .results-wrap {
+            width: 100%;
+            max-width: 700px;
+        }
+
+        .gap-item {
+            display: flex;
+            flex-direction: column;
+            gap: .3rem;
+            padding: .875rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: .5rem;
+            background: var(--bg);
+        }
+
+        .gap-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gap-req {
+            font-size: .875rem;
+            font-weight: 600;
+        }
+
+        .gap-level {
+            font-size: .75rem;
+            font-weight: 600;
+            padding: .2rem .6rem;
+            border-radius: 6px;
+        }
+
+        .gap-high {
+            background: #3b1616;
+            color: #f87171;
+        }
+
+        .gap-med {
+            background: #2e1f00;
+            color: #fbbf24;
+        }
+
+        .gap-low {
+            background: #163b25;
+            color: #4ade80;
+        }
+
+        .gap-none {
+            background: #1a1a2e;
+            color: #818cf8;
+        }
+
+        .gap-status {
+            font-size: .8rem;
+            color: var(--muted);
+        }
+
+        .resource-item {
+            padding: .75rem 1rem;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            margin-bottom: .5rem;
+            background: var(--bg);
+        }
+
+        .resource-req {
+            font-size: .7rem;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: .25rem;
+            text-transform: uppercase;
+            letter-spacing: .06em;
+        }
+
+        .resource-title {
+            font-size: .875rem;
+            font-weight: 600;
+            margin-bottom: .2rem;
+        }
+
+        .resource-title a {
+            color: var(--text);
+            text-decoration: none;
+        }
+
+        .resource-title a:hover {
+            color: var(--accent);
+        }
+
+        .resource-why {
+            font-size: .78rem;
+            color: var(--muted);
+        }
+
+        .roadmap-text {
+            white-space: pre-wrap;
+            font-size: .84rem;
+            color: var(--muted);
+            line-height: 1.8;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+        }
+
+        /* ── TABS ── */
+        .tabs {
+            display: flex;
+            gap: .5rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: .5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            font-family: inherit;
+            font-size: .8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all .2s;
+        }
+
+        .tab.active {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: #fff;
+        }
+
+        /* ── NAV ── */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 56px;
+            background: rgba(9, 9, 15, .85);
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            z-index: 100;
+        }
+
+        .nav-logo {
+            font-weight: 700;
+            font-size: .95rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .nav-career {
+            font-size: .8rem;
+            color: var(--muted);
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .has-nav {
+            padding-top: 4.5rem;
+        }
+
+        /* ── ERROR ── */
+        .error-msg {
+            color: var(--red);
+            font-size: .85rem;
+            margin-top: .75rem;
+        }
+
+        @media (max-width: 600px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV (hidden by default) -->
+    <nav class="navbar" id="navbar" style="display:none">
+        <div class="nav-logo">
+            <span>🧭</span> CareerPilot AI
+        </div>
+        <div class="nav-career" id="nav-career"></div>
+    </nav>
+
+    <!-- PAGE: LANDING -->
+    <div class="page active landing" id="page-landing">
+        <div class="logo">🧭</div>
+        <h1>CareerPilot AI</h1>
+        <p>Your AI-powered career preparation guide</p>
+        <div class="card">
+            <label for="goal-input">What career are you preparing for?</label>
+            <textarea id="goal-input" rows="3"
+                placeholder="e.g. I want to become a Data Scientist in India within 6 months"></textarea>
+            <div class="hint">Be specific — include country and timeline if you have them</div>
+            <div id="landing-error" class="error-msg"></div>
+            <button class="btn btn-primary" id="start-btn" style="width:100%; justify-content:center"
+                onclick="startSession()">
+                Analyze My Career Goal →
+            </button>
+        </div>
+    </div>
+
+    <!-- PAGE: ANALYZING -->
+    <div class="page analyzing" id="page-analyzing">
+        <div class="logo">🧭</div>
+        <h2>Analyzing your career goal</h2>
+        <p>This takes 1–3 minutes. Please keep this page open.</p>
+        <div class="steps">
+            <div class="step" id="step-research">
+                <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.35-4.35" />
+                </svg>
+                <span>Researching career requirements...</span>
+            </div>
+            <div class="step" id="step-questions">
+                <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 11H5a2 2 0 0 0-2 2v3a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-3a2 2 0 0 0-2-2h-4" />
+                    <polyline points="9 17 12 20 15 17" />
+                    <line x1="12" y1="12" x2="12" y2="20" />
+                    <circle cx="12" cy="6" r="3" />
+                </svg>
+                <span>Building your assessment...</span>
+            </div>
+        </div>
+        <div id="analyzing-error" class="error-msg" style="margin-top:1rem;text-align:center"></div>
+    </div>
+
+    <!-- PAGE: RESEARCH -->
+    <div class="page has-nav" id="page-research">
+        <div class="research-wrap">
+            <div class="section">
+                <div class="section-title">Career Intelligence</div>
+                <h1 id="research-title" style="font-size:1.75rem;font-weight:700;margin-bottom:.25rem"></h1>
+                <p id="research-subtitle" style="color:var(--muted);font-size:.875rem;margin-bottom:1.5rem"></p>
+            </div>
+            <div class="section">
+                <div class="section-title">Overview</div>
+                <div class="section-card">
+                    <p class="overview-text" id="research-overview"></p>
+                </div>
+            </div>
+            <div class="section" id="info-section">
+                <div class="section-title">Career Information</div>
+                <div class="section-card">
+                    <div class="info-grid" id="info-grid"></div>
+                </div>
+            </div>
+            <div class="section">
+                <div class="section-title" id="req-count-label">Requirements</div>
+                <div class="section-card">
+                    <div class="req-list" id="req-list"></div>
+                </div>
+            </div>
+            <div class="actions">
+                <button class="btn btn-primary" onclick="showPage('assessment')">Start Assessment →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE: ASSESSMENT -->
+    <div class="page has-nav" id="page-assessment">
+        <div class="assessment-wrap">
+            <h2 style="font-size:1.5rem;font-weight:700;margin-bottom:.5rem">Let's understand your level</h2>
+            <p style="color:var(--muted);font-size:.875rem;margin-bottom:1.5rem">Answer each question so CareerPilot can
+                identify your skill gaps.</p>
+            <div class="card">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="q-progress"></div>
+                </div>
+                <div class="q-meta">
+                    <span id="q-counter">Question 1 of 8</span>
+                    <span id="q-category" style="color:var(--accent)"></span>
+                </div>
+                <div class="q-text" id="q-text"></div>
+                <div id="q-answer-area"></div>
+            </div>
+            <div id="assessment-error" class="error-msg"></div>
+            <div class="q-nav">
+                <button class="btn btn-ghost" id="q-back-btn" onclick="qBack()" style="display:none">← Back</button>
+                <button class="btn btn-primary" id="q-next-btn" onclick="qNext()">Continue →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE: COMPLETING -->
+    <div class="page analyzing" id="page-completing">
+        <div class="logo">🧭</div>
+        <h2>Building your career plan</h2>
+        <p>Analyzing gaps, finding resources and creating your roadmap.<br>This takes 2–5 minutes.</p>
+        <div class="steps">
+            <div class="step" id="step-skill_gap">
+                <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="12" y1="8" x2="12" y2="12" />
+                    <line x1="12" y1="16" x2="12.01" y2="16" />
+                </svg>
+                <span>Analyzing your skill gaps...</span>
+            </div>
+            <div class="step" id="step-resources">
+                <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
+                </svg>
+                <span>Finding free learning resources...</span>
+            </div>
+            <div class="step" id="step-roadmap">
+                <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="3" y1="12" x2="21" y2="12" />
+                    <line x1="3" y1="6" x2="21" y2="6" />
+                    <line x1="3" y1="18" x2="21" y2="18" />
+                </svg>
+                <span>Creating your personalized roadmap...</span>
+            </div>
+        </div>
+        <div id="completing-error" class="error-msg" style="margin-top:1rem;text-align:center"></div>
+    </div>
+
+    <!-- PAGE: RESULTS -->
+    <div class="page has-nav" id="page-results">
+        <div class="results-wrap">
+            <div class="section-title" style="margin-bottom:.75rem">Your Career Plan</div>
+            <h1 id="results-title" style="font-size:1.6rem;font-weight:700;margin-bottom:1.5rem"></h1>
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('gaps')">Skill Gaps</button>
+                <button class="tab" onclick="switchTab('resources')">Resources</button>
+                <button class="tab" onclick="switchTab('roadmap')">Roadmap</button>
+            </div>
+            <div id="tab-gaps"></div>
+            <div id="tab-resources" style="display:none"></div>
+            <div id="tab-roadmap" style="display:none"></div>
+            <div class="actions" style="margin-top:1.5rem">
+                <button class="btn btn-ghost" onclick="restart()">← Start over</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── State ──────────────────────────────────────────────────────
+        const API = 'http://localhost:8000/api'
+        let state = {
+            sessionId: null,
+            careerGoal: null,
+            research: null,
+            questions: [],
+            resources: [],
+            skillGap: [],
+            roadmap: '',
+            qIndex: 0,
+            answers: {},
+        }
+
+        // ── Navigation ─────────────────────────────────────────────────
+        function showPage(name) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'))
+            document.getElementById('page-' + name).classList.add('active')
+            const showNav = !['landing', 'analyzing', 'completing'].includes(name)
+            document.getElementById('navbar').style.display = showNav ? 'flex' : 'none'
+            window.scrollTo(0, 0)
+        }
+
+        // ── Landing ────────────────────────────────────────────────────
+        async function startSession() {
+            const input = document.getElementById('goal-input').value.trim()
+            if (!input) return
+            const btn = document.getElementById('start-btn')
+            btn.disabled = true
+            btn.textContent = 'Starting...'
+            document.getElementById('landing-error').textContent = ''
+
+            try {
+                const res = await fetch(`${API}/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ user_input: input })
+                })
+                if (!res.ok) throw new Error(await res.text())
+                const data = await res.json()
+                state.sessionId = data.session_id
+                state.careerGoal = data.career_goal
+                document.getElementById('nav-career').textContent = data.career_goal.career
+                showPage('analyzing')
+                startAnalysis()
+            } catch (e) {
+                document.getElementById('landing-error').textContent = e.message || 'Failed to start. Is the backend running?'
+                btn.disabled = false
+                btn.textContent = 'Analyze My Career Goal →'
+            }
+        }
+
+        // ── Step icons ─────────────────────────────────────────────────
+        const SPINNER = `<svg class="step-icon spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>`
+        const CHECK = `<svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>`
+
+        function setStep(id, status, label) {
+            const el = document.getElementById('step-' + id)
+            if (!el) return
+            el.className = 'step ' + status
+            const icon = status === 'running' ? SPINNER : status === 'done' ? CHECK : el.querySelector('.step-icon').outerHTML
+            el.innerHTML = icon + `<span>${label}</span>`
+        }
+
+        // ── Phase 1: Analyze ───────────────────────────────────────────
+        function startAnalysis() {
+            setStep('research', 'running', 'Researching career requirements...')
+            setStep('questions', 'running', 'Building your assessment...')
+
+            const es = new EventSource(`${API}/analyze/${state.sessionId}`)
+
+            es.onmessage = function (e) {
+                try {
+                    const msg = JSON.parse(e.data)
+                    if (msg.event === 'step') {
+                        if (msg.step === 'research' && msg.status === 'done') {
+                            state.research = msg.data
+                            setStep('research', 'done', 'Career requirements researched ✓')
+                        }
+                        if (msg.step === 'questions' && msg.status === 'done') {
+                            state.questions = msg.data
+                            setStep('questions', 'done', 'Assessment ready ✓')
+                        }
+                    }
+                    if (msg.event === 'done') {
+                        es.close()
+                        setTimeout(() => {
+                            renderResearch()
+                            showPage('research')
+                        }, 800)
+                    }
+                    if (msg.event === 'error') {
+                        es.close()
+                        document.getElementById('analyzing-error').textContent = msg.message || 'Analysis failed.'
+                    }
+                } catch { }
+            }
+
+            es.onerror = function () {
+                // EventSource reconnects automatically — only close if we got results
+                if (state.research && state.questions.length > 0) {
+                    es.close()
+                    renderResearch()
+                    showPage('research')
+                }
+            }
+        }
+
+        // ── Research page ──────────────────────────────────────────────
+        function renderResearch() {
+            const cg = state.careerGoal
+            const r = state.research
+            document.getElementById('research-title').textContent = cg.career
+            let sub = ''
+            if (cg.country) sub += cg.country
+            if (cg.timeline) sub += (sub ? ' • ' : '') + cg.timeline
+            document.getElementById('research-subtitle').textContent = sub
+
+            document.getElementById('research-overview').textContent = r.career_overview || ''
+
+            const info = r.career_information || {}
+            const grid = document.getElementById('info-grid')
+            grid.innerHTML = ''
+            const items = [
+                ['💰 Salary Range', info.salary_range],
+                ['📈 Job Outlook', info.job_outlook],
+                ['💼 Responsibilities', info.typical_responsibilities],
+                ['🏢 Work Environment', info.work_environment],
+            ]
+            items.forEach(([label, val]) => {
+                if (!val) return
+                grid.innerHTML += `<div class="info-item"><div class="info-label">${label}</div><div class="info-value">${val}</div></div>`
+            })
+            document.getElementById('info-section').style.display = grid.innerHTML ? '' : 'none'
+
+            const BADGE = { skill: 'badge-skill', technology: 'badge-tech', education: 'badge-edu', experience: 'badge-exp', certification: 'badge-cert' }
+            document.getElementById('req-count-label').textContent = `Requirements (${(r.requirements || []).length})`
+            document.getElementById('req-list').innerHTML = (r.requirements || []).map(req => `
+    <div class="req-item">
+      <span class="badge ${BADGE[req.category] || 'badge-other'}">${req.category}</span>
+      <div><div class="req-text">${req.requirement}</div><div class="req-imp">${req.importance}</div></div>
+    </div>`).join('')
+        }
+
+        // ── Assessment ─────────────────────────────────────────────────
+        function showPage_assessment() {
+            showPage('assessment')
+            renderQuestion()
+        }
+
+        document.getElementById('page-research').querySelector('.btn-primary').onclick = function () {
+            state.qIndex = 0
+            state.answers = {}
+            showPage('assessment')
+            renderQuestion()
+        }
+
+        function renderQuestion() {
+            const q = state.questions[state.qIndex]
+            if (!q) return
+            const total = state.questions.length
+            const i = state.qIndex
+            const pct = ((i) / total) * 100
+
+            document.getElementById('q-progress').style.width = pct + '%'
+            document.getElementById('q-counter').textContent = `Question ${i + 1} of ${total}`
+            document.getElementById('q-category').textContent = q.category
+            document.getElementById('q-text').textContent = q.question
+            document.getElementById('q-back-btn').style.display = i > 0 ? '' : 'none'
+            document.getElementById('q-next-btn').textContent = i === total - 1 ? 'Analyze My Skill Gaps →' : 'Continue →'
+            document.getElementById('assessment-error').textContent = ''
+
+            const area = document.getElementById('q-answer-area')
+            const cur = state.answers[i]
+
+            if (q.question_type === 'level') {
+                area.innerHTML = ['Beginner', 'Intermediate', 'Advanced'].map(lvl =>
+                    `<button class="choice-btn${cur === lvl ? ' selected' : ''}" onclick="selectAnswer('${lvl}')">${lvl}</button>`
+                ).join('')
+                area.className = 'level-btns'
+            } else if (q.question_type === 'yes_no') {
+                area.innerHTML = ['Yes', 'No'].map(opt =>
+                    `<button class="choice-btn${cur === opt ? ' selected' : ''}" onclick="selectAnswer('${opt}')">${opt}</button>`
+                ).join('')
+                area.className = 'yesno-btns'
+            } else if (q.question_type === 'number') {
+                area.innerHTML = `<div style="display:flex;align-items:center;gap:.75rem"><input class="num-input" type="number" min="0" step="0.5" value="${cur || ''}" oninput="state.answers[state.qIndex]=this.value" placeholder="0" /><span style="color:var(--muted);font-size:.875rem">years</span></div>`
+                area.className = ''
+            } else {
+                area.innerHTML = `<textarea class="text-input" rows="3" oninput="state.answers[state.qIndex]=this.value" placeholder="Your answer...">${cur || ''}</textarea>`
+                area.className = ''
+            }
+        }
+
+        function selectAnswer(val) {
+            state.answers[state.qIndex] = val
+            renderQuestion()
+        }
+
+        function qBack() {
+            if (state.qIndex > 0) { state.qIndex--; renderQuestion() }
+        }
+
+        async function qNext() {
+            const q = state.questions[state.qIndex]
+            const val = state.answers[state.qIndex]
+            if (val === undefined || val === null || val === '') {
+                document.getElementById('assessment-error').textContent = 'Please answer this question before continuing.'
+                return
+            }
+            if (state.qIndex < state.questions.length - 1) {
+                state.qIndex++
+                renderQuestion()
+                return
+            }
+            // Submit all answers
+            const btn = document.getElementById('q-next-btn')
+            btn.disabled = true
+            btn.textContent = 'Submitting...'
+
+            const payload = state.questions.map((q, i) => {
+                let ans = state.answers[i] ?? ''
+                if (q.question_type === 'number' && ans !== '') ans = `${parseFloat(ans)} years`
+                return { question: q.question, requirement: q.requirement, category: q.category, question_type: q.question_type, answer: String(ans) }
+            })
+
+            try {
+                const res = await fetch(`${API}/submit-answers/${state.sessionId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ answers: payload })
+                })
+                if (!res.ok) throw new Error(await res.text())
+                showPage('completing')
+                startCompletion()
+            } catch (e) {
+                document.getElementById('assessment-error').textContent = e.message || 'Submission failed.'
+                btn.disabled = false
+                btn.textContent = 'Analyze My Skill Gaps →'
+            }
+        }
+
+        // ── Phase 2: Complete ──────────────────────────────────────────
+        function startCompletion() {
+            setStep('skill_gap', 'running', 'Analyzing your skill gaps...')
+            setStep('resources', 'running', 'Finding free learning resources...')
+            setStep('roadmap', 'running', 'Creating your personalized roadmap...')
+
+            const es = new EventSource(`${API}/complete/${state.sessionId}`)
+
+            es.onmessage = function (e) {
+                try {
+                    const msg = JSON.parse(e.data)
+                    if (msg.event === 'step') {
+                        if (msg.step === 'skill_gap' && msg.status === 'done') {
+                            state.skillGap = msg.data
+                            setStep('skill_gap', 'done', 'Skill gaps identified ✓')
+                        }
+                        if (msg.step === 'resources' && msg.status === 'done') {
+                            state.resources = msg.data
+                            setStep('resources', 'done', 'Resources found ✓')
+                        }
+                        if (msg.step === 'roadmap' && msg.status === 'done') {
+                            state.roadmap = msg.data
+                            setStep('roadmap', 'done', 'Roadmap ready ✓')
+                        }
+                    }
+                    if (msg.event === 'done') {
+                        es.close()
+                        setTimeout(() => {
+                            renderResults()
+                            showPage('results')
+                        }, 800)
+                    }
+                    if (msg.event === 'error') {
+                        es.close()
+                        document.getElementById('completing-error').textContent = msg.message || 'Completion failed.'
+                    }
+                } catch { }
+            }
+
+            es.onerror = function () {
+                if (state.skillGap.length > 0) {
+                    es.close()
+                    renderResults()
+                    showPage('results')
+                }
+            }
+        }
+
+        // ── Results ────────────────────────────────────────────────────
+        function renderResults() {
+            document.getElementById('results-title').textContent = state.careerGoal.career
+
+            // Skill Gaps
+            const GAP_CLASS = { 'High': 'gap-high', 'Medium': 'gap-med', 'Low': 'gap-low', 'None': 'gap-none' }
+            document.getElementById('tab-gaps').innerHTML = (state.skillGap || []).map(g => `
+    <div class="gap-item">
+      <div class="gap-header">
+        <span class="gap-req">${g.requirement}</span>
+        <span class="gap-level ${GAP_CLASS[g.gap_level] || 'gap-none'}">${g.gap_level}</span>
+      </div>
+      <div class="gap-status">${g.user_status || ''}</div>
+    </div>`).join('') || '<p style="color:var(--muted)">No gaps found.</p>'
+
+            // Resources
+            document.getElementById('tab-resources').innerHTML = (state.resources || []).flatMap(r =>
+                (r.resources || []).map(res => `
+      <div class="resource-item">
+        <div class="resource-req">${r.requirement}</div>
+        <div class="resource-title"><a href="${res.url}" target="_blank">${res.title} ↗</a></div>
+        <div class="resource-why">${res.why_recommended}</div>
+      </div>`)
+            ).join('') || '<p style="color:var(--muted)">No resources found.</p>'
+
+            // Roadmap
+            document.getElementById('tab-roadmap').innerHTML = `<div class="roadmap-text">${state.roadmap || 'No roadmap generated.'}</div>`
+        }
+
+        function switchTab(name) {
+            document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', ['gaps', 'resources', 'roadmap'][i] === name))
+            document.getElementById('tab-gaps').style.display = name === 'gaps' ? '' : 'none'
+            document.getElementById('tab-resources').style.display = name === 'resources' ? '' : 'none'
+            document.getElementById('tab-roadmap').style.display = name === 'roadmap' ? '' : 'none'
+        }
+
+        function restart() {
+            state = { sessionId: null, careerGoal: null, research: null, questions: [], resources: [], skillGap: [], roadmap: '', qIndex: 0, answers: {} }
+            document.getElementById('goal-input').value = ''
+            showPage('landing')
+        }
+
+        // Enter to submit on landing
+        document.getElementById('goal-input').addEventListener('keydown', e => {
+            if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); startSession() }
+        })
+    </script>
+</body>
+
+</html>
